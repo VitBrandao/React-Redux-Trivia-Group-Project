@@ -16,7 +16,7 @@ export const login = (state = INITIAL_STATE, action) => {
   case ADD_LOGIN:
     return { ...state, ...action.payload };
   case GET_TOKEN:
-    return { ...state, token: action.payload.token};
+    return { ...state, token: action.payload.token };
   default:
     return state;
   }

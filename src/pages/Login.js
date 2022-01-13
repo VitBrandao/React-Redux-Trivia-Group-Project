@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import { fetchToken } from '../reducer/actions';
 
 class Login extends React.Component {
@@ -17,11 +18,19 @@ class Login extends React.Component {
     this.onButtonClick = this.onButtonClick.bind(this);
   }
 
-  async onButtonClick(){
-    const { fetchToken } = this.props;
-    const response = await fetchToken();
+  async onButtonClick() {
+    const { getToken } = this.props;
+    const response = await getToken();
 
     return this.saveToken(response);
+  }
+
+  onInputChange({ target }) {
+    const { value, name } = target;
+
+    this.setState({
+      [name]: value,
+    }, () => this.verifyInputFields());
   }
 
   saveToken(data) {
@@ -31,14 +40,6 @@ class Login extends React.Component {
     const finalToken = JSON.parse(getTokenItem).payload.token;
     localStorage.setItem('token', finalToken);
     return finalToken;
-  }
-
-  onInputChange({ target }) {
-    const { value, name } = target;
-
-    this.setState({
-      [name]: value,
-    }, () => this.verifyInputFields());
   }
 
   verifyInputFields() {
@@ -57,7 +58,7 @@ class Login extends React.Component {
 
   render() {
     const { name, email, disableButton } = this.state;
-  
+
     return (
       <div>
         <label htmlFor="name">
@@ -86,7 +87,7 @@ class Login extends React.Component {
           type="button"
           data-testid="btn-play"
           disabled={ disableButton }
-          onClick= { this.onButtonClick }
+          onClick={ this.onButtonClick }
         >
           Play
         </button>
@@ -95,12 +96,17 @@ class Login extends React.Component {
   }
 }
 
+Login.propTypes = {
+  getToken: PropTypes.func.isRequired,
+  // history: PropTypes.string.isRequired,
+};
+
 const mapDispatchToProps = (dispatch) => ({
-  fetchToken: () => dispatch(fetchToken()),
-})
+  getToken: () => dispatch(fetchToken()),
+});
 
 const mapStateToProps = (state) => ({
   token: state.login.token,
-})
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);
