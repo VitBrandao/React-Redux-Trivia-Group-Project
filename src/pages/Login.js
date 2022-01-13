@@ -14,6 +14,10 @@ class Login extends React.Component {
     this.onInputChange = this.onInputChange.bind(this);
   }
 
+  ononButtonClick(){
+    return 'clicou';
+  }
+
   onInputChange({ target }) {
     const { value, name } = target;
 
@@ -67,6 +71,7 @@ class Login extends React.Component {
           type="button"
           data-testid="btn-play"
           disabled={ disableButton }
+          onClick= { this.onButtonClick }
         >
           Play
         </button>
