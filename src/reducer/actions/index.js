@@ -1,8 +1,18 @@
-import { ADD_LOGIN } from '../reducers/login';
+import { ADD_LOGIN, GET_TOKEN } from '../reducers/login';
 
-const loginAction = (payload) => ({
+export const loginAction = (payload) => ({
   type: ADD_LOGIN,
   payload,
 });
 
-export default loginAction;
+export const tokenAction = (payload) => ({
+  type: GET_TOKEN,
+  payload,
+})
+
+export const fetchToken = () => {
+  return (dispatch) => fetch('https://opentdb.com/api_token.php?command=request')
+    .then((response) => response.json())
+    .then((data) => dispatch(tokenAction(data)))
+    .catch((error) => console.log(error))
+}

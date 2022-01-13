@@ -1,4 +1,6 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { fetchToken } from '../reducer/actions';
 
 class Login extends React.Component {
   constructor() {
@@ -12,10 +14,23 @@ class Login extends React.Component {
 
     this.verifyInputFields = this.verifyInputFields.bind(this);
     this.onInputChange = this.onInputChange.bind(this);
+    this.onButtonClick = this.onButtonClick.bind(this);
   }
 
-  ononButtonClick(){
-    return 'clicou';
+  async onButtonClick(){
+    const { fetchToken } = this.props;
+    const response = await fetchToken();
+
+    return this.saveToken(response);
+  }
+
+  saveToken(data) {
+    localStorage.setItem('userToken', JSON.stringify(data));
+    const getTokenItem = localStorage.getItem('userToken');
+
+    const finalToken = JSON.parse(getTokenItem).payload.token;
+    localStorage.setItem('token', finalToken);
+    return finalToken;
   }
 
   onInputChange({ target }) {
@@ -42,7 +57,7 @@ class Login extends React.Component {
 
   render() {
     const { name, email, disableButton } = this.state;
-
+  
     return (
       <div>
         <label htmlFor="name">
@@ -80,4 +95,12 @@ class Login extends React.Component {
   }
 }
 
-export default Login;
+const mapDispatchToProps = (dispatch) => ({
+  fetchToken: () => dispatch(fetchToken()),
+})
+
+const mapStateToProps = (state) => ({
+  token: state.login.token,
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
