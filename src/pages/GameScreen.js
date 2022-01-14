@@ -4,7 +4,7 @@ class GameScreen extends React.Component {
   render() {
     return (
       <span>Tela de jogo</span>
-    )
+    );
   }
 }
 

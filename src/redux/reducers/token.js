@@ -1,14 +1,13 @@
 export const GET_TOKEN = 'GET_TOKEN';
 
-const INITIAL_STATE = {
-  token: '',
-}
+let INITIAL_STATE = '';
 
 export const token = (state = INITIAL_STATE, action) => {
   switch (action.type) {
   case GET_TOKEN:
-    return { ...state, token: action.token };
+    INITIAL_STATE = action.token;
+    return INITIAL_STATE;
   default:
-    return state;  
+    return state;
   }
-}
+};
