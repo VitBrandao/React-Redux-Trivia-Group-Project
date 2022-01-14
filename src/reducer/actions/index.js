@@ -1,8 +1,6 @@
-import { ADD_LOGIN } from '../reducers/login';
+export const ADD_LOGIN = 'ADD_LOGIN';
 
-const loginAction = (payload) => ({
+export const loginAction = (payload) => ({
   type: ADD_LOGIN,
   payload,
 });
-
-export default loginAction;
