@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { fetchToken } from '../reducer/actions';
+import { fetchToken } from '../redux/actions';
 
 class Login extends React.Component {
   constructor() {
@@ -20,9 +20,12 @@ class Login extends React.Component {
 
   async onButtonClick() {
     const { getToken } = this.props;
-    const response = await getToken();
+    await getToken();
 
-    return this.saveToken(response);
+    this.saveToken();
+
+    const { history } = this.props;
+    history.push('/game');
   }
 
   onInputChange({ target }) {
@@ -33,13 +36,10 @@ class Login extends React.Component {
     }, () => this.verifyInputFields());
   }
 
-  saveToken(data) {
-    localStorage.setItem('userToken', JSON.stringify(data));
-    const getTokenItem = localStorage.getItem('userToken');
+  saveToken() {
+    const { token } = this.props;
 
-    const finalToken = JSON.parse(getTokenItem).payload.token;
-    localStorage.setItem('token', finalToken);
-    return finalToken;
+    return localStorage.setItem('token', JSON.stringify(token.token));
   }
 
   verifyInputFields() {
@@ -106,7 +106,7 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 const mapStateToProps = (state) => ({
-  token: state.login.token,
+  token: state.token,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);
