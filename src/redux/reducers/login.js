@@ -1,19 +1,26 @@
-export const ADD_LOGIN = 'ADD_LOGIN';
+import { ADD_LOGIN } from '../actions';
 
 const INITIAL_STATE = {
   player: {
     name: '',
-    assertions: '',
-    score: '',
+    // assertions: '',
+    // score: '',
     gravatarEmail: '',
   },
 };
 
-export const login = (state = INITIAL_STATE, action) => {
+const login = (state = INITIAL_STATE, action) => {
   switch (action.type) {
   case ADD_LOGIN:
-    return { ...state, ...action.payload };
+    return {
+      ...state,
+      player: {
+        ...action.payload,
+      },
+    };
   default:
     return state;
   }
 };
+
+export default login;
