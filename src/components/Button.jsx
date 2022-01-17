@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 export default class Button extends Component {
   render() {
     const { children, dataTestId, isDisabled,
-      btnClass, types, onChangeClick } = this.props;
+      btnClass, types, onChangeClick, ...rest } = this.props;
     return (
       <button
         data-testid={ dataTestId }
@@ -12,6 +12,7 @@ export default class Button extends Component {
         className={ btnClass }
         disabled={ isDisabled }
         onClick={ onChangeClick }
+        { ...rest }
       >
         { children }
       </button>
