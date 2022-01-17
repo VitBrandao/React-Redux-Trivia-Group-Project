@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Button from './Button';
 import shuffleArray from '../helpers';
+import Timer from './Timer';
 
 class Questions extends Component {
   constructor() {
@@ -77,6 +78,7 @@ class Questions extends Component {
             {randomAlternatives}
           </section>
         </div>
+        <Timer />
       </main>
     );
   }
