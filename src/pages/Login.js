@@ -2,53 +2,44 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { fetchToken, loginAction } from '../redux/actions';
+import { getToken, loginAction } from '../redux/actions';
 
 class Login extends React.Component {
   constructor() {
     super();
 
     this.state = {
-      name: '',
-      email: '',
+      player: {
+        gravatarEmail: '',
+        name: '',
+      },
       disableButton: true,
     };
-
-    this.verifyInputFields = this.verifyInputFields.bind(this);
-    this.onInputChange = this.onInputChange.bind(this);
-    this.onButtonClick = this.onButtonClick.bind(this);
   }
 
-  async onButtonClick() {
-    const { getToken, setLogin } = this.props;
-    const { name, email } = this.state;
-    await getToken();
-
+  onButtonClick = (event) => {
+    event.preventDefault();
+    const { player } = this.state;
+    const { getUserToken, setLogin, history } = this.props;
+    getUserToken();
     this.saveToken();
-    setLogin({ name, gravatarEmail: email });
-
-    const { history } = this.props;
+    setLogin(player);
     history.push('/game');
   }
 
-  onInputChange({ target }) {
+  onInputChange = ({ target }) => {
     const { value, name } = target;
-
-    this.setState({
-      [name]: value,
-    }, () => this.verifyInputFields());
+    this.setState((prevState) => ({
+      player: {
+        ...prevState.player, [name]: value,
+      },
+    }), () => this.verifyInputFields());
   }
 
-  saveToken() {
-    const { token } = this.props;
+  verifyInputFields = () => {
+    const { player: { gravatarEmail, name } } = this.state;
 
-    return localStorage.setItem('token', JSON.stringify(token.token));
-  }
-
-  verifyInputFields() {
-    const { name, email } = this.state;
-
-    if (name.length > 0 && email.length > 0) {
+    if (name.length > 0 && gravatarEmail.length > 0) {
       this.setState({
         disableButton: false,
       });
@@ -59,9 +50,13 @@ class Login extends React.Component {
     }
   }
 
-  render() {
-    const { name, email, disableButton } = this.state;
+  saveToken = () => {
+    const { token } = this.props;
+    return localStorage.setItem('token', JSON.stringify(token));
+  }
 
+  render() {
+    const { player: { name, gravatarEmail }, disableButton } = this.state;
     return (
       <div>
         <label htmlFor="name">
@@ -79,8 +74,8 @@ class Login extends React.Component {
           Email:
           <input
             type="email"
-            name="email"
-            value={ email }
+            name="gravatarEmail"
+            value={ gravatarEmail }
             data-testid="input-gravatar-email"
             onChange={ this.onInputChange }
           />
@@ -109,22 +104,26 @@ class Login extends React.Component {
   }
 }
 
+Login.defaultProps = {
+  token: '',
+};
+
 Login.propTypes = {
-  getToken: PropTypes.func.isRequired,
-  setLogin: PropTypes.string.isRequired,
+  token: PropTypes.string,
+  getUserToken: PropTypes.func.isRequired,
+  setLogin: PropTypes.func.isRequired,
   history: PropTypes.shape({
     push: PropTypes.func,
   }).isRequired,
-  token: PropTypes.string.isRequired,
 };
-
-const mapDispatchToProps = (dispatch) => ({
-  getToken: () => dispatch(fetchToken()),
-  setLogin: (payload) => dispatch(loginAction(payload)),
-});
 
 const mapStateToProps = (state) => ({
   token: state.token,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  getUserToken: () => dispatch(getToken()),
+  setLogin: (player) => dispatch(loginAction(player)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);
