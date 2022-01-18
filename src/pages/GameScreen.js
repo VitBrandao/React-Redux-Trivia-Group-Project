@@ -7,12 +7,12 @@ import Questions from '../components/Questions';
 
 class GameScreen extends React.Component {
   render() {
-    const { loading, questions } = this.props;
+    const { loading, questions, history } = this.props;
     return (
       <div>
         <Header />
         {loading && <Loading />}
-        {questions.length !== 0 && <Questions />}
+        {questions.length !== 0 && <Questions history={ history } />}
       </div>
     );
   }
@@ -21,6 +21,9 @@ class GameScreen extends React.Component {
 GameScreen.propTypes = {
   loading: PropTypes.bool.isRequired,
   questions: PropTypes.arrayOf(PropTypes.object).isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
 };
 
 const mapStateToProps = (state) => ({

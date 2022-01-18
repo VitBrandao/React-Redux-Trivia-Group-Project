@@ -125,12 +125,22 @@ class Questions extends Component {
 
   showNextQuestion = () => {
     const { questionsIndex } = this.state;
+    const { history } = this.props;
+
     this.setState({
-      questionsIndex: questionsIndex + 1,
       isAnswerSelected: false,
       isSuffled: false,
       suffledArray: [],
     });
+
+    const magicNumber = 4;
+    if (questionsIndex < magicNumber) {
+      this.setState({
+        questionsIndex: questionsIndex + 1,
+      });
+    } else {
+      history.push('/feedback');
+    }
   }
 
   render() {
@@ -186,6 +196,9 @@ Questions.propTypes = {
     assertions: PropTypes.string.isRequired,
     score: PropTypes.number.isRequired,
     gravatarEmail: PropTypes.string.isRequired,
+  }).isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func,
   }).isRequired,
 };
 
