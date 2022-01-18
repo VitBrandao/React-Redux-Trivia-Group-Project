@@ -102,9 +102,6 @@ class Questions extends Component {
     const { stopCounter } = this.props;
     stopCounter();
 
-    // const prevAnswers = document.querySelector('#answer-options');
-    // console.log(prevAnswers);
-
     const btnClicked = event.target.className;
     if (btnClicked === 'correct') this.sumScore();
 
@@ -117,23 +114,37 @@ class Questions extends Component {
       answer.style.border = incorrectColor;
     });
 
-    // await this.changeState();
+    this.createNextButton();
   }
 
-  // changeState = () => {
-  //   this.setState({
-  //     isOptionSelected: true,
-  //   });
-  // }
+  createNextButton = () => {
+    this.setState({
+      isAnswerSelected: true,
+    });
+  }
 
-  // customAlternatives(prevAnswers) {
-  //   console.log(prevAnswers);
-  //   return prevAnswers;
-  //   // return 'oi';
-  // }
+  showNextQuestion = () => {
+    const { questionsIndex } = this.state;
+    const { history } = this.props;
+
+    this.setState({
+      isAnswerSelected: false,
+      isSuffled: false,
+      suffledArray: [],
+    });
+
+    const magicNumber = 4;
+    if (questionsIndex < magicNumber) {
+      this.setState({
+        questionsIndex: questionsIndex + 1,
+      });
+    } else {
+      history.push('/feedback');
+    }
+  }
 
   render() {
-    const { questionsIndex } = this.state;
+    const { questionsIndex, isAnswerSelected } = this.state;
     const { questions } = this.props;
     const currentQuestion = questions[questionsIndex];
     const { category, question } = currentQuestion;
@@ -151,6 +162,16 @@ class Questions extends Component {
           </section>
         </div>
         <Timer />
+
+        { isAnswerSelected ? (
+          <button
+            data-testid="btn-next"
+            type="button"
+            onClick={ this.showNextQuestion }
+          >
+            Next
+          </button>
+        ) : null }
       </main>
     );
   }
@@ -175,6 +196,9 @@ Questions.propTypes = {
     assertions: PropTypes.string.isRequired,
     score: PropTypes.number.isRequired,
     gravatarEmail: PropTypes.string.isRequired,
+  }).isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func,
   }).isRequired,
 };
 
