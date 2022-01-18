@@ -102,9 +102,6 @@ class Questions extends Component {
     const { stopCounter } = this.props;
     stopCounter();
 
-    // const prevAnswers = document.querySelector('#answer-options');
-    // console.log(prevAnswers);
-
     const btnClicked = event.target.className;
     if (btnClicked === 'correct') this.sumScore();
 
@@ -116,21 +113,7 @@ class Questions extends Component {
     wrongAnswer.forEach((answer) => {
       answer.style.border = incorrectColor;
     });
-
-    // await this.changeState();
   }
-
-  // changeState = () => {
-  //   this.setState({
-  //     isOptionSelected: true,
-  //   });
-  // }
-
-  // customAlternatives(prevAnswers) {
-  //   console.log(prevAnswers);
-  //   return prevAnswers;
-  //   // return 'oi';
-  // }
 
   render() {
     const { questionsIndex } = this.state;
