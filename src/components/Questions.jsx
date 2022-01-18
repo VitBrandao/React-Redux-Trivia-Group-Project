@@ -11,6 +11,7 @@ class Questions extends Component {
     super();
     this.state = {
       questionsIndex: 0,
+      // isOptionSelected: false,
     };
   }
 
@@ -19,7 +20,9 @@ class Questions extends Component {
       incorrect_answers: incorrectAnswers,
       correct_answer: correctAnswer,
     } = currentQuestion;
+
     const alternatives = shuffleArray([...incorrectAnswers, correctAnswer]);
+
     return this.altVerification(alternatives, correctAnswer);
   }
 
@@ -59,6 +62,7 @@ class Questions extends Component {
     const defaultPoint = 10;
     let difficultyPoint = 0;
     const questionDifficulty = questions[questionsIndex].difficulty;
+
     if (questionDifficulty === 'easy') {
       difficultyPoint = 1;
     }
@@ -83,8 +87,13 @@ class Questions extends Component {
     event.preventDefault();
     const { stopCounter } = this.props;
     stopCounter();
+
+    // const prevAnswers = document.querySelector('#answer-options');
+    // console.log(prevAnswers);
+
     const btnClicked = event.target.className;
     if (btnClicked === 'correct') this.sumScore();
+
     const rightAnswer = document.querySelector('.correct');
     const wrongAnswer = document.querySelectorAll('.incorrect');
     const correctColor = '3px solid rgb(6, 240, 15)';
@@ -93,7 +102,21 @@ class Questions extends Component {
     wrongAnswer.forEach((answer) => {
       answer.style.border = incorrectColor;
     });
+
+    // await this.changeState();
   }
+
+  // changeState = () => {
+  //   this.setState({
+  //     isOptionSelected: true,
+  //   });
+  // }
+
+  // customAlternatives(prevAnswers) {
+  //   console.log(prevAnswers);
+  //   return prevAnswers;
+  //   // return 'oi';
+  // }
 
   render() {
     const { questionsIndex } = this.state;
@@ -101,6 +124,7 @@ class Questions extends Component {
     const currentQuestion = questions[questionsIndex];
     const { category, question } = currentQuestion;
     const randomAlternatives = this.showAlternatives(currentQuestion);
+
     return (
       <main>
         <div>
@@ -108,8 +132,8 @@ class Questions extends Component {
           <p data-testid="question-text">{question}</p>
         </div>
         <div>
-          <section data-testid="answer-options">
-            {randomAlternatives}
+          <section data-testid="answer-options" id="answer-options">
+            { randomAlternatives }
           </section>
         </div>
         <Timer />
