@@ -11,7 +11,8 @@ class Questions extends Component {
     super();
     this.state = {
       questionsIndex: 0,
-      // isOptionSelected: false,
+      isSuffled: false,
+      suffledArray: [],
     };
   }
 
@@ -21,13 +22,23 @@ class Questions extends Component {
       correct_answer: correctAnswer,
     } = currentQuestion;
 
-    const alternatives = shuffleArray([...incorrectAnswers, correctAnswer]);
+    const { isSuffled } = this.state;
 
-    return this.altVerification(alternatives, correctAnswer);
+    if (isSuffled === false) {
+      const alternatives = shuffleArray([...incorrectAnswers, correctAnswer]);
+      this.setState({
+        suffledArray: alternatives,
+        isSuffled: true,
+      });
+    }
+
+    return this.altVerification(correctAnswer);
   }
 
-  altVerification = (alternatives, correctAnswer) => {
-    const checkAlts = alternatives.map((alt, index) => {
+  altVerification = (correctAnswer) => {
+    const { suffledArray } = this.state;
+
+    const checkAlts = suffledArray.map((alt, index) => {
       if (alt === correctAnswer) {
         return (
           <Button
@@ -54,11 +65,12 @@ class Questions extends Component {
   }
 
   sumScore = () => {
-    const hardScore = 3;
     const { questionsIndex } = this.state;
     const { addScore, questions, player } = this.props;
     const { name, gravatarEmail } = player;
     const getCurrentTime = document.querySelector('.game-counter').innerHTML;
+
+    const hardScore = 3;
     const defaultPoint = 10;
     let difficultyPoint = 0;
     const questionDifficulty = questions[questionsIndex].difficulty;
@@ -72,6 +84,7 @@ class Questions extends Component {
     if (questionDifficulty === 'hard') {
       difficultyPoint = hardScore;
     }
+
     const score = defaultPoint + (Number(getCurrentTime) * difficultyPoint);
 
     const localStorageData = [{
@@ -79,6 +92,7 @@ class Questions extends Component {
       score,
       picture: gravatarEmail,
     }];
+
     addScore(score);
     return localStorage.setItem('ranking', JSON.stringify(localStorageData));
   }
