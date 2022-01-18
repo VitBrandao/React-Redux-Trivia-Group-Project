@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
-export default class Timer extends Component {
+class Timer extends Component {
   constructor() {
     super();
     this.state = {
@@ -12,19 +14,27 @@ export default class Timer extends Component {
     this.questionTime();
   }
 
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
+
   questionTime = () => {
     const seconds = 1000;
-    const time = 30000;
-    const interval = setInterval(() => {
+    this.interval = setInterval(() => {
       this.setState((prevState) => ({
         counter: prevState.counter - 1,
-      }));
+      }), () => {
+        const { isStoped } = this.props;
+        const { counter } = this.state;
+        if (isStoped === true) {
+          clearInterval(this.interval);
+        }
+        if (counter <= 0) {
+          clearInterval(this.interval);
+          this.timerCount();
+        }
+      });
     }, seconds);
-    setTimeout(() => {
-      clearInterval(interval);
-      const { counter } = this.state;
-      if (counter === 0) return this.timerCount();
-    }, time);
   }
 
   timerCount() {
@@ -45,8 +55,18 @@ export default class Timer extends Component {
     const { counter } = this.state;
     return (
       <div>
-        <p>{ counter }</p>
+        <p className="game-counter">{ counter }</p>
       </div>
     );
   }
 }
+
+Timer.propTypes = {
+  isStoped: PropTypes.bool.isRequired,
+};
+
+const mapStateToProps = (state) => ({
+  isStoped: state.reducer.stop,
+});
+
+export default connect(mapStateToProps, null)(Timer);

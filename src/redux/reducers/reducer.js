@@ -1,14 +1,21 @@
-import { ADD_LOGIN, IS_LOADING, GET_QUESTIONS } from '../actions';
+import {
+  ADD_LOGIN,
+  IS_LOADING,
+  GET_QUESTIONS,
+  STOP_TIMER,
+  INCREASE_SCORE,
+} from '../actions';
 
 const INITIAL_STATE = {
   player: {
-    gravatarEmail: '',
     name: '',
-    // assertions: '',
-    // score: '',
+    assertions: '',
+    score: 0,
+    gravatarEmail: '',
   },
   questions: [],
   isLoading: false,
+  stop: false,
 };
 
 const reducer = (state = INITIAL_STATE, action) => {
@@ -31,6 +38,17 @@ const reducer = (state = INITIAL_STATE, action) => {
       ...state,
       questions: action.questions,
       isLoading: false,
+    };
+  case STOP_TIMER:
+    return {
+      ...state,
+      stop: !action.stop,
+    };
+  case INCREASE_SCORE:
+    return {
+      player: {
+        score: state.score + action.score,
+      },
     };
   default:
     return state;

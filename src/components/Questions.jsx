@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import Button from './Button';
 import shuffleArray from '../helpers';
 import Timer from './Timer';
+import { increaseScore, stopTimer } from '../redux/actions';
 
 class Questions extends Component {
   constructor() {
@@ -30,7 +31,7 @@ class Questions extends Component {
             key={ index }
             dataTestId="correct-answer"
             className="correct"
-            onClick={ () => this.handleClick() }
+            onClick={ this.handleClick }
           >
             {alt}
           </Button>);
@@ -38,9 +39,9 @@ class Questions extends Component {
       return (
         <Button
           key={ index }
-          dataTestId={ `wrong-answer-${0}` }
+          dataTestId={ `wrong-answer-${index}` }
           className="incorrect"
-          onClick={ () => this.handleClick() }
+          onClick={ this.handleClick }
         >
           {alt}
         </Button>
@@ -49,12 +50,45 @@ class Questions extends Component {
     return checkAlts;
   }
 
-  handleClick = () => {
+  sumScore = () => {
+    const hardScore = 3;
+    const { questionsIndex } = this.state;
+    const { addScore, questions, player } = this.props;
+    const { name, gravatarEmail } = player;
+    const getCurrentTime = document.querySelector('.game-counter').innerHTML;
+    const defaultPoint = 10;
+    let difficultyPoint = 0;
+    const questionDifficulty = questions[questionsIndex].difficulty;
+    if (questionDifficulty === 'easy') {
+      difficultyPoint = 1;
+    }
+    if (questionDifficulty === 'medium') {
+      difficultyPoint = 2;
+    }
+    if (questionDifficulty === 'hard') {
+      difficultyPoint = hardScore;
+    }
+    const score = defaultPoint + (Number(getCurrentTime) * difficultyPoint);
+
+    const localStorageData = [{
+      name,
+      score,
+      picture: gravatarEmail,
+    }];
+    addScore(score);
+    return localStorage.setItem('ranking', JSON.stringify(localStorageData));
+  }
+
+  handleClick = (event) => {
+    event.preventDefault();
+    const { stopCounter } = this.props;
+    stopCounter();
+    const btnClicked = event.target.className;
+    if (btnClicked === 'correct') this.sumScore();
     const rightAnswer = document.querySelector('.correct');
     const wrongAnswer = document.querySelectorAll('.incorrect');
     const correctColor = '3px solid rgb(6, 240, 15)';
     const incorrectColor = '3px solid rgb(255, 0, 0)';
-
     rightAnswer.style.border = correctColor;
     wrongAnswer.forEach((answer) => {
       answer.style.border = incorrectColor;
@@ -84,7 +118,13 @@ class Questions extends Component {
   }
 }
 
+const mapDispatchToProps = (dispatch) => ({
+  stopCounter: () => dispatch(stopTimer()),
+  addScore: (point) => dispatch(increaseScore(point)),
+});
+
 const mapStateToProps = (state) => ({
+  player: state.reducer.player,
   questions: state.reducer.questions,
 });
 
@@ -92,4 +132,4 @@ Questions.propTypes = {
   questions: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
-export default connect(mapStateToProps)(Questions);
+export default connect(mapStateToProps, mapDispatchToProps)(Questions);
