@@ -6,6 +6,8 @@ const REQUEST_TOKEN = 'https://opentdb.com/api_token.php?command=request';
 export const ADD_LOGIN = 'ADD_LOGIN';
 export const IS_LOADING = 'IS_LOADING';
 export const GET_QUESTIONS = 'GET_QUESTIONS';
+export const STOP_TIMER = 'STOP_TIMER';
+export const INCREASE_SCORE = 'INCREASE_SCORE';
 
 export const loginAction = (player) => ({
   type: ADD_LOGIN,
@@ -24,6 +26,16 @@ export const saveQuestions = (questions) => ({
 
 export const onLoad = () => ({
   type: IS_LOADING,
+});
+
+export const stopTimer = (stop) => ({
+  type: STOP_TIMER,
+  stop,
+});
+
+export const increaseScore = (score) => ({
+  type: INCREASE_SCORE,
+  score,
 });
 
 export const getQuestionsApi = (token) => async (dispatch) => {
