@@ -1,5 +1,4 @@
 import {
-  ADD_LOGIN,
   IS_LOADING,
   GET_QUESTIONS,
   STOP_TIMER,
@@ -7,12 +6,12 @@ import {
 } from '../actions';
 
 const INITIAL_STATE = {
-  player: {
-    name: '',
-    assertions: '',
-    score: 0,
-    gravatarEmail: '',
-  },
+  // player: {
+  //   name: '',
+  //   assertions: '',
+  //   score: 0,
+  //   gravatarEmail: '',
+  // },
   questions: [],
   isLoading: false,
   stop: false,
@@ -20,14 +19,6 @@ const INITIAL_STATE = {
 
 const reducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-  case ADD_LOGIN:
-    return {
-      ...state,
-      player: {
-        ...state.player,
-        ...action.player,
-      },
-    };
   case IS_LOADING:
     return {
       ...state,
@@ -46,8 +37,10 @@ const reducer = (state = INITIAL_STATE, action) => {
     };
   case INCREASE_SCORE:
     return {
+      ...state,
       player: {
-        score: state.score + action.score,
+        ...state.player,
+        score: action.score,
       },
     };
   default:

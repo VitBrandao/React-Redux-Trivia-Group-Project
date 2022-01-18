@@ -8,7 +8,7 @@ class Header extends React.Component {
     super(props);
     this.state = {
       imageEmail: '',
-      score: 0,
+      // score: 0,
     };
     this.fetchGravatarApi = this.fetchGravatarApi.bind(this);
   }
@@ -27,8 +27,8 @@ class Header extends React.Component {
   }
 
   render() {
-    const { name } = this.props;
-    const { imageEmail, score } = this.state;
+    const { name, globalScore } = this.props;
+    const { imageEmail } = this.state;
 
     return (
       <div>
@@ -40,7 +40,7 @@ class Header extends React.Component {
         </p>
         <span data-testid="header-score">
           {' '}
-          {score}
+          {globalScore}
           {' '}
         </span>
       </div>
@@ -49,13 +49,15 @@ class Header extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  name: state.reducer.player.name,
-  email: state.reducer.player.gravatarEmail,
+  name: state.player.name,
+  email: state.player.gravatarEmail,
+  globalScore: state.player.score,
 });
 
 Header.propTypes = {
   name: PropTypes.string.isRequired,
   email: PropTypes.string.isRequired,
+  globalScore: PropTypes.string.isRequired,
 };
 
 export default connect(mapStateToProps)(Header);

@@ -124,12 +124,20 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 const mapStateToProps = (state) => ({
-  player: state.reducer.player,
+  player: state.player,
   questions: state.reducer.questions,
 });
 
 Questions.propTypes = {
   questions: PropTypes.arrayOf(PropTypes.object).isRequired,
+  addScore: PropTypes.func.isRequired,
+  stopCounter: PropTypes.func.isRequired,
+  player: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    assertions: PropTypes.string.isRequired,
+    score: PropTypes.number.isRequired,
+    gravatarEmail: PropTypes.string.isRequired,
+  }).isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Questions);
