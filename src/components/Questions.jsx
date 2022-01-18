@@ -113,10 +113,28 @@ class Questions extends Component {
     wrongAnswer.forEach((answer) => {
       answer.style.border = incorrectColor;
     });
+
+    this.createNextButton();
+  }
+
+  createNextButton = () => {
+    this.setState({
+      isAnswerSelected: true,
+    });
+  }
+
+  showNextQuestion = () => {
+    const { questionsIndex } = this.state;
+    this.setState({
+      questionsIndex: questionsIndex + 1,
+      isAnswerSelected: false,
+      isSuffled: false,
+      suffledArray: [],
+    });
   }
 
   render() {
-    const { questionsIndex } = this.state;
+    const { questionsIndex, isAnswerSelected } = this.state;
     const { questions } = this.props;
     const currentQuestion = questions[questionsIndex];
     const { category, question } = currentQuestion;
@@ -134,6 +152,16 @@ class Questions extends Component {
           </section>
         </div>
         <Timer />
+
+        { isAnswerSelected ? (
+          <button
+            data-testid="btn-next"
+            type="button"
+            onClick={ this.showNextQuestion }
+          >
+            Next
+          </button>
+        ) : null }
       </main>
     );
   }
