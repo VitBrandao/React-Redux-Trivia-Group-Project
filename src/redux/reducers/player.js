@@ -1,4 +1,4 @@
-import { INCREASE_SCORE, ADD_LOGIN } from '../actions';
+import { INCREASE_SCORE, ADD_LOGIN, INCREASE_CORRECT_ANSWERS } from '../actions';
 
 const INITIAL_STATE = {
   name: '',
@@ -18,6 +18,11 @@ const player = (state = INITIAL_STATE, action) => {
     return {
       ...state,
       ...action.player,
+    };
+  case INCREASE_CORRECT_ANSWERS:
+    return {
+      ...state,
+      assertions: action.assertions,
     };
   default:
     return state;

@@ -4,13 +4,14 @@ import { connect } from 'react-redux';
 import Button from './Button';
 import shuffleArray from '../helpers';
 import Timer from './Timer';
-import { increaseScore, stopTimer } from '../redux/actions';
+import { increaseCorrectAnswers, increaseScore, stopTimer } from '../redux/actions';
 
 class Questions extends Component {
   constructor() {
     super();
     this.state = {
       questionsIndex: 0,
+      questionsCorrect: 0,
       isSuffled: false,
       suffledArray: [],
     };
@@ -65,11 +66,10 @@ class Questions extends Component {
   }
 
   sumScore = () => {
-    const { questionsIndex } = this.state;
-    const { addScore, questions, player } = this.props;
+    const { questionsIndex, questionsCorrect } = this.state;
+    const { addScore, addAssertions, questions, player } = this.props;
     const { name, gravatarEmail } = player;
     const getCurrentTime = document.querySelector('.game-counter').innerHTML;
-
     const hardScore = 3;
     const defaultPoint = 10;
     let difficultyPoint = 0;
@@ -86,7 +86,6 @@ class Questions extends Component {
     }
 
     const score = defaultPoint + (Number(getCurrentTime) * difficultyPoint);
-
     const localStorageData = [{
       name,
       score,
@@ -94,16 +93,18 @@ class Questions extends Component {
     }];
 
     addScore(score);
+    addAssertions(questionsCorrect);
     return localStorage.setItem('ranking', JSON.stringify(localStorageData));
   }
 
-  handleClick = (event) => {
-    event.preventDefault();
+  handleClick = ({ target: { className } }) => {
     const { stopCounter } = this.props;
     stopCounter();
-
-    const btnClicked = event.target.className;
-    if (btnClicked === 'correct') this.sumScore();
+    if (className === 'correct') {
+      this.setState((prevState) => ({
+        questionsCorrect: prevState.questionsCorrect + 1,
+      }), () => this.sumScore());
+    }
 
     const rightAnswer = document.querySelector('.correct');
     const wrongAnswer = document.querySelectorAll('.incorrect');
@@ -180,6 +181,7 @@ class Questions extends Component {
 const mapDispatchToProps = (dispatch) => ({
   stopCounter: () => dispatch(stopTimer()),
   addScore: (point) => dispatch(increaseScore(point)),
+  addAssertions: (assertion) => dispatch(increaseCorrectAnswers(assertion)),
 });
 
 const mapStateToProps = (state) => ({
@@ -190,6 +192,7 @@ const mapStateToProps = (state) => ({
 Questions.propTypes = {
   questions: PropTypes.arrayOf(PropTypes.object).isRequired,
   addScore: PropTypes.func.isRequired,
+  addAssertions: PropTypes.func.isRequired,
   stopCounter: PropTypes.func.isRequired,
   player: PropTypes.shape({
     name: PropTypes.string.isRequired,
