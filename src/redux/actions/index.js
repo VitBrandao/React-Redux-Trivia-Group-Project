@@ -8,6 +8,7 @@ export const IS_LOADING = 'IS_LOADING';
 export const GET_QUESTIONS = 'GET_QUESTIONS';
 export const STOP_TIMER = 'STOP_TIMER';
 export const INCREASE_SCORE = 'INCREASE_SCORE';
+export const INCREASE_CORRECT_ANSWERS = 'INCREASE_CORRECT_ANSWERS';
 
 export const loginAction = (player) => ({
   type: ADD_LOGIN,
@@ -36,6 +37,11 @@ export const stopTimer = (stop) => ({
 export const increaseScore = (score) => ({
   type: INCREASE_SCORE,
   score,
+});
+
+export const increaseCorrectAnswers = (assertions) => ({
+  type: INCREASE_CORRECT_ANSWERS,
+  assertions,
 });
 
 export const getQuestionsApi = (token) => async (dispatch) => {
