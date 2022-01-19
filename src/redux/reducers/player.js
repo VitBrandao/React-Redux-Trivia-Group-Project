@@ -2,7 +2,7 @@ import { INCREASE_SCORE, ADD_LOGIN, INCREASE_CORRECT_ANSWERS } from '../actions'
 
 const INITIAL_STATE = {
   name: '',
-  assertions: '',
+  assertions: 0,
   score: 0,
   gravatarEmail: '',
 };
