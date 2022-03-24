@@ -10,4 +10,4 @@ Besides the challenge of coding using Redux structure, it was a good experience 
 
 Trivia was like a quiz game, where the user, after some login validations, had 5 general questions to answer, with 4 answer options. Each question could be answered in a 30 seconds limit time and by the end of the game, each user received his final score. The quiz data came from an external API.
 
-<img src="https://miro.medium.com/max/800/1*bs6W6c6yYS36PcD9joLVtw.png" alt="react-redux />
+<img src="https://miro.medium.com/max/800/1*bs6W6c6yYS36PcD9joLVtw.png" alt="react-redux" />
